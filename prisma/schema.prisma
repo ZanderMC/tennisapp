@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String
+  emailVerified Boolean   @default(false)
+  image         String?
+  rol           String    @default("USER")
+
+  sessions      Session[]
+  accounts      Account[]
+  bookings      Booking[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String   @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Court {
+  id        Int        @id @default(autoincrement())
+  name      String
+  surface   String?
+  price     Float      //  precio por horario
+
+  schedules Schedule[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Schedule {
+  id        Int       @id @default(autoincrement())
+  courtId   Int
+  court     Court     @relation(fields: [courtId], references: [id])
+
+  date      DateTime
+  timeStart String
+  timeEnd   String
+
+  bookings  Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courtId, date])
+  @@unique([courtId, date, timeStart])
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  scheduleId Int
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+
+  status     BookingStatus @default(PENDING)
+  amount     Float
+
+  payment    Payment?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([scheduleId]) //  evita doble reserva del mismo horario
+  @@index([userId])
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+
+  bookingId      Int      @unique
+  booking        Booking  @relation(fields: [bookingId], references: [id])
+
+  mpPaymentId    String?  // ID del pago en Mercado Pago
+  mpPreferenceId String?  // ID de la preferencia creada
+
+  status         PaymentStatus @default(PENDING)
+  method         String?       // visa, mastercard, etc
+  amount         Float
+
+  externalRef    String?  // útil para reconciliación
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([mpPaymentId])
+}
+
+enum BookingStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
