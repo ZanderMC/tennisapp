@@ -1,7 +1,7 @@
 {
   "name": "tennisapp",
   "version": "0.1.0",
-  "type" :"module",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,8 +10,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@better-auth/prisma-adapter": "^1.7.6",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "better-auth": "^1.7.6",
     "dotenv": "^18.0.4",
     "next": "16.3.5",
     "pg": "^8.23.0",
