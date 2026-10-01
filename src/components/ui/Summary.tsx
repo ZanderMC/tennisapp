@@ -1,3 +1,5 @@
+import { BuyButton } from "./BuyButton";
+
 //import { BuyButton } from "./BuyButton";
 type SummaryProps = {
     selectedDate: Date | null;
@@ -71,12 +73,12 @@ export function Summary({selectedDate,selectedSlots,courtName,slotPrice,onClear,
                 >
                     Limpiar datos
                 </button>
-                {/* <BuyButton
+                 <BuyButton
                     court={courtName}
                     selectedDate={selectedDate}
                     selectedSlots={selectedSlots}
                     total={total}
-                /> */}
+                /> 
             </div>
         </section>
     );
