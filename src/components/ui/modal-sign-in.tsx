@@ -6,9 +6,10 @@ import { useEffect, useRef } from "react";
 type ModalSigninProps = {
     onClose: () => void;
     onSwitchToSignup: () => void;
+   
 };
 
-export function ModalSignin({ onClose, onSwitchToSignup }: ModalSigninProps) {
+export function ModalSignin({ onClose, onSwitchToSignup ,  }: ModalSigninProps) {
     const modalRef = useRef<HTMLElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +51,8 @@ export function ModalSignin({ onClose, onSwitchToSignup }: ModalSigninProps) {
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
+
+  
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

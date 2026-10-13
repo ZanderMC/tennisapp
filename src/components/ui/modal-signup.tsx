@@ -6,9 +6,10 @@ import { registerEmail } from "../../../server/auth-action";
 type ModalSignupProps = {
     onClose: () => void;
     onSwitchToSignin: () => void;
+    
 };
 
-export function ModalSignup({ onClose, onSwitchToSignin }: ModalSignupProps) {
+export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
     const modalRef = useRef<HTMLElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +52,8 @@ export function ModalSignup({ onClose, onSwitchToSignin }: ModalSignupProps) {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
 
+
+    
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <button

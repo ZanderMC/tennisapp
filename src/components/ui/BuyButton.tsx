@@ -16,7 +16,7 @@ type BuyButtonProps = {
     total: number;
 };
 
-function toDayKey(date: Date): string {
+function toDayKey(date: Date)  {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
     const d = String(date.getDate()).padStart(2, "0");
@@ -26,10 +26,10 @@ function toDayKey(date: Date): string {
 export function BuyButton({ court, selectedDate, selectedSlots, total }: BuyButtonProps) {
     const triggerButtonRef = useRef<HTMLButtonElement>(null);
     const router = useRouter();
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session , isPending } = authClient.useSession();
     const [mounted, setMounted] = useState(false);
     const [activeModal, setActiveModal] = useState<AuthModal>(null);
-
+   
     useEffect(() => {
  
         setMounted(true);
@@ -95,7 +95,7 @@ export function BuyButton({ court, selectedDate, selectedSlots, total }: BuyButt
                 activeModal &&
                 createPortal(
                     activeModal === "signup" ? (
-                        <ModalSignup onClose={closeModal} onSwitchToSignin={() => setActiveModal("signin")} />
+                        <ModalSignup onClose={closeModal} onSwitchToSignin={() => setActiveModal("signin")  } />
                     ) : (
                         <ModalSignin onClose={closeModal} onSwitchToSignup={() => setActiveModal("signup")} />
                     ),

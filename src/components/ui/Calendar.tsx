@@ -10,6 +10,7 @@ type CalendarProps = {
   courtName: string;
   onSelectedDateChange: (date: Date) => void;
   onSelectedSlotsChange: React.Dispatch<React.SetStateAction<string[]>>;
+ 
 };
 
 export const Calendar = ({
@@ -26,7 +27,9 @@ export const Calendar = ({
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
+     
     return `${y}-${m}-${d}`; // yyyy-mm-dd
+   
   };
 
   useEffect(() => {
@@ -51,8 +54,8 @@ export const Calendar = ({
         const response = await fetch(`/api/bookings?${query.toString()}`, {
           signal: controller.signal,
         });
-
         const data = (await response.json()) as { bookedSlots?: string[] };
+     
 
         if (!response.ok) {
           setBookedSlots([]);
@@ -108,12 +111,16 @@ export const Calendar = ({
 
   const days = useMemo(() => {
     const today = new Date();
+  
     return Array.from({ length: 7 }, (_, i) => {
       const d = new Date(today);
+      
       d.setDate(today.getDate() + i);
+     
       return d;
     });
   }, []);
+    
 
   return (
     <div className="mx-auto mt-10 flex w-full max-w-125 flex-col gap-6">
@@ -157,6 +164,7 @@ export const Calendar = ({
           <div className="flex flex-col gap-2">
             {hours.map((hour) => {
               const isBooked = bookedSlots.includes(hour);
+              
               const isSelected = selectedSlots.includes(hour);
 
               return (

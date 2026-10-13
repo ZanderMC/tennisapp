@@ -1,6 +1,6 @@
 import { ReservationSection } from "../components/landing/ReservationSection";
 import { Header } from "../components/ui/Header";
-import TestAuthPage from "../test-auth/page";
+import WAWA from "../test-auth/page";
 
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
   <>
   <Header/>
   <ReservationSection />
-  <TestAuthPage/>
+  <WAWA/>
   </>
   )
 }

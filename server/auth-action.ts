@@ -4,6 +4,7 @@ import {auth} from "@/src/lib/auth";
 import { redirect } from "next/navigation";   
 import { headers } from "next/headers";
 
+
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) {
         return error.message;
@@ -49,7 +50,9 @@ try {
     throw new Error(`No se pudo crear el usuario: ${getErrorMessage(error)}`);
 }
 
- redirect("/");
+ 
+redirect("/");
+ 
 }
  
 
@@ -72,18 +75,20 @@ try {
 } catch (error) {
     throw new Error(`No se pudo iniciar sesion: ${getErrorMessage(error)}`);
 }
-
+ 
 redirect("/");
 }
  
 
-export async  function SignOut(formdata: FormData) {
+export async  function SignOut( ) {
  
-
 await auth.api.signOut({
- 
+  
     headers: await headers()
 }
 )
+
+ 
+redirect("/");
 }
  

@@ -9,15 +9,16 @@ export function ReservationSection() {
         const now = new Date()
         return new Date(now.getFullYear(), now.getMonth(), now.getDate())
     }
+     
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(() => getStartOfToday())
     const [selectedSlots, setSelectedSlots] = useState<string[]>([])
 
     const slotPrice = 20
-    const courtName = "Cancha 1"
+    const courtName = "Court 1"
 
     const handleClearData = () => {
-                setSelectedDate(getStartOfToday())
+        setSelectedDate(getStartOfToday())
         setSelectedSlots([])
     }
           
