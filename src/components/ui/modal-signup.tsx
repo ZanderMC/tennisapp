@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from "react";
-import { registerEmail } from "../../../server/auth-action";
+import { authClient } from "@/src/lib/auth-client";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type ModalSignupProps = {
     onClose: () => void;
@@ -12,6 +12,8 @@ type ModalSignupProps = {
 export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
     const modalRef = useRef<HTMLElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         firstInputRef.current?.focus();
@@ -52,6 +54,46 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
 
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setError(null);
+
+        const form = event.currentTarget;
+        if (!form.checkValidity()) {
+            setError("Completa los campos e introduce un email valido y una contrasena de al menos 8 caracteres.");
+            form.querySelector<HTMLElement>(":invalid")?.focus();
+            return;
+        }
+
+        const formData = new FormData(form);
+        const name = String(formData.get("name") ?? "");
+        const email = String(formData.get("email") ?? "");
+        const password = String(formData.get("password") ?? "");
+
+        setIsSubmitting(true);
+        try {
+            const { error: signUpError } = await authClient.signUp.email({
+                name,
+                email,
+                password,
+            });
+
+            if (signUpError) {
+                setError(signUpError.message || "No se pudo crear la cuenta. Revisa tus datos e intenta nuevamente.");
+                return;
+            }
+
+            onClose();
+        } catch (requestError) {
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "No se pudo crear la cuenta. Revisa tu conexion e intenta nuevamente."
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     
     return (
@@ -74,7 +116,7 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
                 <h2 id="signup-title" className="text-xl font-semibold text-zinc-900">Crea una cuenta</h2>
                 <p id="signup-description" className="mt-1 text-sm text-zinc-600">Necesitas una cuenta para comprar tu reserva.</p>
 
-                <form className="mt-5 space-y-3" action={registerEmail}>
+                <form className="mt-5 space-y-3" onSubmit={handleSubmit}>
                     <label htmlFor="signup-name" className="block text-sm font-medium text-zinc-800">Nombre</label>
                     <input
                         ref={firstInputRef}
@@ -82,6 +124,8 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
                         name="name"
                         id="signup-name"
                         placeholder="John Doe"
+                        required
+                        onChange={() => setError(null)}
                         className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 placeholder:text-zinc-400 outline-none focus:b-300  "
                     />
 
@@ -91,6 +135,8 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
                         id="signup-email"
                         name="email"
                         placeholder="john.doe@gmail.com"
+                        required
+                        onChange={() => setError(null)}
                         className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 placeholder:text-zinc-400 outline-none focus:border-gray-300  "
                     />
 
@@ -102,6 +148,9 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
                                 type="password"
                                 id="signup-password"
                                 placeholder="Contrasena"
+                                required
+                                minLength={8}
+                                onChange={() => setError(null)}
                                 className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 placeholder:text-zinc-400 outline-none focus:border-gray-300  "
                             />
                         </div>
@@ -117,11 +166,18 @@ export function ModalSignup({ onClose, onSwitchToSignin,  }: ModalSignupProps) {
                         </div> */}
                     </div>
 
+                    {error && (
+                        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert" aria-live="polite">
+                            {error}
+                        </p>
+                    )}
+
                     <button
-                      type="submit"
+                        type="submit"
+                        disabled={isSubmitting}
                         className="mt-2 w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600"
                     >
-                        Registrarse
+                        {isSubmitting ? "Creando cuenta..." : "Registrarse"}
                     </button>
                 </form>
 
