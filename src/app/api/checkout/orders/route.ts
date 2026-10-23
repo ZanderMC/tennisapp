@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import { createOrder } from "@/src/lib/checkout-store";
-import { getProductById } from "@/src/lib/products";
 import { auth } from "@/src/lib/auth";
 
-
-
 type OrderRequestBody = {
-  productId?: string;
   court?: string;
   selectedDate?: string;
   selectedSlots?: string[];
@@ -21,8 +17,6 @@ export async function POST(request: Request) {
   } catch {
     // body inicia vacio
   }
-
-  const productId = body?.productId;
 
   if (body.court && body.selectedDate && Array.isArray(body.selectedSlots) && body.selectedSlots.length > 0) {
     const session = await auth.api.getSession({ headers: request.headers });
@@ -77,39 +71,7 @@ export async function POST(request: Request) {
     });
   }
 
-  if (!productId) {
-    return NextResponse.json({ message: "Se requiere productId." }, { status: 400 });
-  }
+   
 
-  const product = getProductById(productId);
-
-  if (!product) {
-    return NextResponse.json({ message: "Producto no encontrado." }, { status: 404 });
-  }
-
-  const order = await createOrder({
-    productId: product.id,
-    items: [
-      {
-        id: product.id,
-        title: product.name,
-        description: product.description,
-        category_id: product.categoryId,
-        unit_price: product.price,
-        quantity: 1,
-        currency_id: product.currency,
-      },
-    ],
-    amount: product.price,
-    description: product.description,
-    currency: product.currency,
-  });
-
-  return NextResponse.json({
-    orderId: order.id,
-    amount: order.amount,
-    currency: order.currency,
-    description: order.description,
-    status: order.status,
-  });
+  return NextResponse.json({ message: "Datos de reserva incompletos." }, { status: 400 });
 }
