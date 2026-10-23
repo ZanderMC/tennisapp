@@ -4,7 +4,10 @@ import { prisma } from "./prisma";
 import { nextCookies } from "better-auth/next-js";
 // If your Prisma file is located elsewhere, you can change the path
  export const auth = betterAuth({
-    user: {
+     trustedOrigins: [
+         process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+     ],
+     user: {
         additionalFields: {
             rol: {
                 type: "string",
