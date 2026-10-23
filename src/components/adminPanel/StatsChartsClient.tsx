@@ -18,7 +18,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/src/components/shadcn/chart";
+} from "@/src/components/Shadcn/chart";
 
 type HourlyPoint = {
   hourLabel: string;
@@ -26,7 +26,7 @@ type HourlyPoint = {
 };
 
 type StatsChartsClientProps = {
-  totalRevenue: number;
+  todayRevenue: number;
   totalBookings: number;
   hourlyData: HourlyPoint[];
   courtTypeData: Array<{
@@ -36,12 +36,13 @@ type StatsChartsClientProps = {
   }>;
   weeklyTrendHistory: Array<{ fecha: string; reservas: number }>;
   weeklyTodayIndex: number;
+  revenueHistory: Array<{ fecha: string; monto: number }>;
 };
 
 const totalRevenueConfig = {
   monto: {
-    label: "Monto total",
-    color: "#f59e0b",
+    label: "Monto por día",
+    color: "#10b981",
   },
 } satisfies ChartConfig;
 
@@ -73,13 +74,23 @@ function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+function formatCurrentDate(): string {
+  return new Intl.DateTimeFormat("es-PE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "America/Lima",
+  }).format(new Date());
+}
+
 export function StatsChartsClient({
-  totalRevenue,
+  todayRevenue,
   totalBookings,
   hourlyData,
   courtTypeData,
   weeklyTrendHistory,
   weeklyTodayIndex,
+  revenueHistory,
 }: StatsChartsClientProps) {
   const [weekOffset, setWeekOffset] = useState(0);
   const minWeekOffset = -Math.floor(weeklyTodayIndex / 7);
@@ -97,29 +108,51 @@ export function StatsChartsClient({
   return (
     <div className="grid w-full gap-6 md:grid-cols-2">
       <article className="rounded-xl bg-white p-5 shadow-md">
-        <h3 className="text-lg font-semibold text-amber-900">Monto total</h3>
+        <h3 className="text-lg font-semibold text-emerald-900">Monto de hoy</h3>
         <p className="mt-1 text-sm text-gray-500">
-          Suma de todos los precios de las reservaciones
+          Ingresos de reservas realizadas hoy
         </p>
-        <p className="mt-3 text-3xl font-bold text-amber-700">
-          {formatCurrency(totalRevenue)}
-        </p>
+        <div className="mt-3 flex items-baseline gap-2">
+          <p className="text-3xl font-bold text-emerald-900">
+            {formatCurrency(todayRevenue)}
+          </p>
+          <p className="text-sm font-medium text-gray-500">
+            {formatCurrentDate()}
+          </p>
+        </div>
 
         <div className="mt-4">
           <ChartContainer className="h-50 w-full" config={totalRevenueConfig}>
-            <BarChart accessibilityLayer data={[{ label: "Total", monto: totalRevenue }]}>
+            <LineChart accessibilityLayer data={revenueHistory}>
               <CartesianGrid vertical={false} />
-              <XAxis dataKey="label" tickLine={false} axisLine={false} />
-              <YAxis tickLine={false} axisLine={false} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="monto" fill="var(--color-monto)" radius={8} />
-            </BarChart>
+              <XAxis dataKey="fecha" tickLine={false} axisLine={false} minTickGap={16} />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => formatCurrency(Number(value))}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    formatter={(value) => [formatCurrency(Number(value)), "Ingresos"]}
+                    labelFormatter={(label) => `Fecha ${label}`}
+                  />
+                }
+              />
+              <Line
+                dataKey="monto"
+                dot={false}
+                stroke="var(--color-monto)"
+                strokeWidth={2.5}
+                type="monotone"
+              />
+            </LineChart>
           </ChartContainer>
         </div>
       </article>
 
       <article className="rounded-xl bg-white p-5 shadow-md">
-        <h3 className="text-lg font-semibold text-amber-900">Reservaciones por hora</h3>
+        <h3 className="text-lg font-semibold text-emerald-900">Reservaciones por hora</h3>
         <p className="mt-1 text-sm text-gray-500">Rango horario de 09:00 a 17:00</p>
         <p className="mt-3 text-sm font-medium text-gray-700">
           Total de reservas: {totalBookings}
@@ -152,7 +185,7 @@ export function StatsChartsClient({
       </article>
 
       <article className="rounded-xl bg-white p-5 shadow-md">
-        <h3 className="text-lg font-semibold text-amber-900">Tipo de cancha mas usado</h3>
+        <h3 className="text-lg font-semibold text-emerald-900">Tipo de cancha mas usado</h3>
         <p className="mt-1 text-sm text-gray-500">Distribucion de reservaciones por tipo</p>
 
         <div className="mt-4">
@@ -187,7 +220,7 @@ export function StatsChartsClient({
       <article className="rounded-xl bg-white p-5 shadow-md">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h3 className="text-lg font-semibold text-amber-900">Reservas por fecha</h3>
+            <h3 className="text-lg font-semibold text-emerald-900">Reservas por fecha</h3>
             <p className="mt-1 text-sm text-gray-500">Vista semanal con historial de semanas pasadas</p>
           </div>
           <div className="flex items-center gap-2 text-xs">
