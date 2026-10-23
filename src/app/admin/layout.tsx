@@ -22,7 +22,8 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <main className="flex min-h-screen flex-row bg-amber-600">
+    <main className="flex min-h-screen flex-row bg-[#F3EDE4]">
+      
       <AdminSidebar />
       <div className="w-full">{children}</div>
     </main>

@@ -9,16 +9,18 @@ export function CtaSection() {
       </h2>
       <p className="mx-auto mt-3 max-w-xl text-emerald-50/90">
         Contáctanos y asegura tu horario hoy mismo. Respuesta rápida por
-        WhatsApp.
+        Gmail.
       </p>
       <a
-        href="https://wa.me/0000000000"
+        href="mailto:braomichael@gmail.com"
         target="_blank"
         rel="noopener noreferrer"
         className="mt-7 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
       >
-        Reservar por WhatsApp
+        Contactar
       </a>
     </section>
   );
 }
+
+ 

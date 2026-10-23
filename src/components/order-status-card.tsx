@@ -110,16 +110,16 @@ export function OrderStatusCard({ orderId }: { orderId: string }) {
   }, [order?.status]);
 
   if (loading) {
-    return <section className="rounded-xl border border-black/10 p-6">Cargando estado...</section>;
+    return <section className="rounded-xl border border-black/10 p-4 sm:p-6">Cargando estado...</section>;
   }
 
   if (error) {
-    return <section className="rounded-xl border border-red-300 bg-red-50 p-6 text-red-700">{error}</section>;
+    return <section className="break-words rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 sm:p-6">{error}</section>;
   }
 
   if (!order) {
     return (
-      <section className="rounded-xl border border-red-300 bg-red-50 p-6 text-red-700">
+      <section className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-700 sm:p-6">
         No se encontró la orden.
       </section>
     );
@@ -128,21 +128,20 @@ export function OrderStatusCard({ orderId }: { orderId: string }) {
   const detailMessage = getStatusDetailMessage(order.statusDetail);
 
   return (
-    <section className={`space-y-4 rounded-xl border p-6 ${statusColor}`}>
-      <p className="text-2xl font-semibold">{icon} {statusLabel}</p>
+    <section className={`space-y-4 rounded-xl border p-4 sm:p-6 ${statusColor}`}>
+      <p className="text-xl font-semibold sm:text-2xl">{icon} {statusLabel}</p>
 
       {detailMessage ? (
         <p className="text-sm">{detailMessage}</p>
       ) : null}
 
       <div className="space-y-1 border-t border-current/20 pt-4 text-sm opacity-80">
-        <p><span className="font-medium">Producto:</span> {order.description}</p>
+        <p className="break-words"><span className="font-medium">Producto:</span> {order.description}</p>
         <p><span className="font-medium">Monto:</span> S/ {order.amount}</p>
-        {order.paymentId ? <p><span className="font-medium">ID de pago:</span> {order.paymentId}</p> : null}
-        <p><span className="font-medium">Orden:</span> {order.id}</p>
-        <p className="text-xs opacity-60">Última actualización: {new Date(order.updatedAt).toLocaleString("es-PE")}</p>
+        {order.paymentId ? <p className="break-all"><span className="font-medium">ID de pago:</span> {order.paymentId}</p> : null}
+        <p className="break-all"><span className="font-medium">Orden:</span> {order.id}</p>
+        <p className="text-xs font-medium">Última actualización: {new Date(order.updatedAt).toLocaleString("es-PE")}</p>
       </div>
     </section>
   );
 }
-

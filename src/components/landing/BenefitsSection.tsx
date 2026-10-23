@@ -18,7 +18,7 @@ const benefits = [
 
 export function BenefitsSection() {
   return (
-    <section className="grid gap-4 md:grid-cols-3">
+    <section id="reservation" className="grid gap-4 md:grid-cols-3">
       {benefits.map((benefit) => (
         <article
           key={benefit.title}

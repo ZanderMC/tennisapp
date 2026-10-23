@@ -25,7 +25,7 @@ export function Summary({selectedDate,selectedSlots,courtName,slotPrice,onClear,
 
     
     return (
-        <section className="mt-10 w-full max-w-125 rounded-xl border h-min   bg-green-950 p-5">
+        <section className="mt-2 w-full min-w-0 max-w-125 rounded-xl border bg-green-950 p-4 sm:p-5 lg:mt-10">
             <p className="text-sm uppercase tracking-wide text-foreground/80">Fecha de reserva</p>
             <p className="mt-1 text-lg font-semibold capitalize">{currentDate}</p>
 
@@ -65,11 +65,11 @@ export function Summary({selectedDate,selectedSlots,courtName,slotPrice,onClear,
                 <span className="text-lg font-bold">${total.toFixed(2)}</span>
             </div>
 
-            <div className="mt-5 flex gap-3">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <button
                     type="button"
                     onClick={onClear}
-                    className="rounded-md border border-background/40 px-4 py-2 text-sm font-medium hover:bg-background/10 cursor-pointer"
+                    className="w-full rounded-md border border-background/40 px-4 py-2 text-sm font-medium hover:bg-background/10 cursor-pointer sm:w-auto"
                 >
                     Limpiar datos
                 </button>
@@ -78,7 +78,7 @@ export function Summary({selectedDate,selectedSlots,courtName,slotPrice,onClear,
                     selectedDate={selectedDate}
                     selectedSlots={selectedSlots}
                     total={total}
-                /> 
+                />
             </div>
         </section>
     );

@@ -128,10 +128,10 @@ export   function PaymentPageClient({ reservation }: PaymentPageClientProps) {
   }
 
   return (
-    <section className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm md:p-8">
-      <div className="mb-6 flex items-center justify-between gap-4 border-b border-black/10 pb-4">
+    <section className="w-full min-w-0 rounded-2xl border border-black/10 bg-white p-4 shadow-sm sm:p-5 md:p-8">
+      <div className="mb-6 flex flex-col items-start gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-zinc-900">Finalizar pago</h2>
+          <h2 className="text-xl font-semibold text-zinc-900 sm:text-2xl">Finalizar pago</h2>
           <p className="text-sm text-zinc-500">Completa tus datos para confirmar la reserva.</p>
         </div>
         <p className="rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
@@ -140,7 +140,7 @@ export   function PaymentPageClient({ reservation }: PaymentPageClientProps) {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-        <div className="rounded-xl border border-black/10 bg-white p-4 md:p-5">
+        <div className="min-w-0 overflow-hidden rounded-xl border border-black/10 bg-white p-3 sm:p-4 md:p-5">
           {loadingOrder ? <p className="text-sm text-zinc-600">Preparando orden...</p> : null}
 
           {order && !loadingOrder ? (
@@ -175,7 +175,7 @@ export   function PaymentPageClient({ reservation }: PaymentPageClientProps) {
           {loadingPayment ? <p className="mt-4 text-sm text-zinc-600">Procesando pago...</p> : null}
         </div>
 
-        <aside className="rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50 to-white p-5 shadow-sm lg:sticky lg:top-6">
+        <aside className="min-w-0 rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50 to-white p-4 shadow-sm sm:p-5 lg:sticky lg:top-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Resumen</p>
           <h3 className="mt-1 text-lg font-semibold text-zinc-900">Tu reserva</h3>
 
@@ -192,7 +192,7 @@ export   function PaymentPageClient({ reservation }: PaymentPageClientProps) {
 
             <div className="rounded-lg bg-white/80 p-3">
               <p className="text-xs uppercase tracking-wide text-zinc-500">Horarios ({reservation.selectedSlots.length})</p>
-              <p className="mt-1 font-medium text-zinc-900">{reservation.selectedSlots.join(", ")}</p>
+              <p className="mt-1 break-words font-medium text-zinc-900">{reservation.selectedSlots.join(", ")}</p>
             </div>
           </div>
 

@@ -33,13 +33,17 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   }
 
   return (
-    <PaymentPageClient
-      reservation={{
-        court,
-        selectedDate,
-        selectedSlots,
-        total,
-      }}
-    />
+    <main className="min-h-screen bg-[#F3EDE4] px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+      <div className="mx-auto w-full max-w-6xl">
+        <PaymentPageClient
+          reservation={{
+            court,
+            selectedDate,
+            selectedSlots,
+            total,
+          }}
+        />
+      </div>
+    </main>
   );
 }

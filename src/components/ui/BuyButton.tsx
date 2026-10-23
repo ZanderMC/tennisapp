@@ -86,7 +86,7 @@ export function BuyButton({ court, selectedDate, selectedSlots, total }: BuyButt
                 type="button"
                 onClick={openModal}
                 disabled={isPending}
-                className="cursor-pointer rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-green-900"
+                className="w-full cursor-pointer rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-green-900 sm:w-auto"
             >
                 {isPending ? "Cargando..." : "Comprar"}
             </button>
