@@ -14,7 +14,7 @@ export function Header() {
      
       return (
         <>
-            <header className="bg-white w-full h-20 flex items-center justify-center px-8 py-4 ">
+            <header className="bg-[#FFFFFF] w-full h-20 flex items-center justify-center px-8 py-4 sticky top-0 z-1000 ">
                 <nav className="flex flex-row gap-2">
                     {!isPending && !session && (
                         <>

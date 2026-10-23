@@ -5,10 +5,6 @@ type ExistsRow = {
   exists: boolean;
 };
 
-type TotalRow = {
-  total: number | null;
-};
-
 type HourCountRow = {
   hour: string;
   count: number;
@@ -24,9 +20,19 @@ type DailyTrendRow = {
   count: number;
 };
 
+type DailyRevenueRow = {
+  day: Date;
+  amount: number;
+};
+
 type TrendPoint = {
   fecha: string;
   reservas: number;
+};
+
+type RevenuePoint = {
+  fecha: string;
+  monto: number;
 };
 
 async function hasColumn(tableName: string, columnName: string): Promise<boolean> {
@@ -120,6 +126,58 @@ async function getDailyTrendWindow(pastDays: number, futureDays: number): Promis
   }));
 }
 
+async function getDailyRevenueWindow(
+  pastDays: number,
+  futureDays: number,
+  hasBookingAmount: boolean,
+  hasCourtPrice: boolean
+): Promise<RevenuePoint[]> {
+  const amountExpression = hasBookingAmount
+    ? `COALESCE(b."amount", 0)`
+    : hasCourtPrice
+      ? `COALESCE(c."price", 0)`
+      : "0";
+  const courtJoin = hasBookingAmount
+    ? ""
+    : hasCourtPrice
+      ? `INNER JOIN "Court" c ON c."id" = s."courtId"`
+      : "";
+
+  const rows = await prisma.$queryRawUnsafe<DailyRevenueRow[]>(
+    `
+      WITH calendar AS (
+        SELECT generate_series(
+          (CURRENT_DATE - $1::int)::date,
+          (CURRENT_DATE + $2::int)::date,
+          INTERVAL '1 day'
+        )::date AS day
+      ),
+      daily_revenue AS (
+        SELECT
+          b."createdAt"::date AS day,
+          COALESCE(SUM(${amountExpression}), 0) AS amount
+        FROM "Booking" b
+        INNER JOIN "Schedule" s ON s."id" = b."scheduleId"
+        ${courtJoin}
+        WHERE b."createdAt"::date >= (CURRENT_DATE - $1::int)
+          AND b."createdAt"::date <= (CURRENT_DATE + $2::int)
+        GROUP BY 1
+      )
+      SELECT c.day AS day, COALESCE(dr.amount, 0) AS amount
+      FROM calendar c
+      LEFT JOIN daily_revenue dr ON dr.day = c.day
+      ORDER BY c.day ASC
+    `,
+    pastDays,
+    futureDays
+  );
+
+  return rows.map((row) => ({
+    fecha: formatDayLabel(new Date(row.day)),
+    monto: Number(row.amount),
+  }));
+}
+
 export async function StatsAdmin() {
   const [hasBookingAmount, hasCourtPrice, hasTimeStart, hasTimeStartLegacy] =
     await Promise.all([
@@ -128,25 +186,6 @@ export async function StatsAdmin() {
       hasColumn("Schedule", "timeStart"),
       hasColumn("Schedule", "timestart"),
     ]);
-
-  let totalRevenue = 0;
-
-  if (hasBookingAmount) {
-    const revenueRows = await prisma.$queryRawUnsafe<TotalRow[]>(
-      `SELECT COALESCE(SUM(b."amount"), 0) AS total FROM "Booking" b`
-    );
-    totalRevenue = Number(revenueRows[0]?.total ?? 0);
-  } else if (hasCourtPrice) {
-    const revenueRows = await prisma.$queryRawUnsafe<TotalRow[]>(
-      `
-        SELECT COALESCE(SUM(c."price"), 0) AS total
-        FROM "Booking" b
-        INNER JOIN "Schedule" s ON s."id" = b."scheduleId"
-        INNER JOIN "Court" c ON c."id" = s."courtId"
-      `
-    );
-    totalRevenue = Number(revenueRows[0]?.total ?? 0);
-  }
 
   const bookingCountRows = await prisma.$queryRawUnsafe<Array<{ count: number }>>(
     `SELECT COUNT(*)::int AS count FROM "Booking"`
@@ -203,16 +242,25 @@ export async function StatsAdmin() {
   const pastDays = 84;
   const futureDays = 84;
   const weeklyTrendHistory = await getDailyTrendWindow(pastDays, futureDays);
+  const revenueHistory = await getDailyRevenueWindow(
+    pastDays,
+    0,
+    hasBookingAmount,
+    hasCourtPrice
+  );
+  const todayRevenue = revenueHistory.at(-1)?.monto ?? 0;
 
   return (
-    <section className="w-full px-6 py-12">
+    <section className="w-full px-6 py-12 bg-[#F3EDE4]">
+      <p className="text-[2rem] font-medium">Estadisticas</p>
       <StatsChartsClient
-        totalRevenue={totalRevenue}
+        todayRevenue={todayRevenue}
         totalBookings={totalBookings}
         hourlyData={hourlyData}
         courtTypeData={courtTypeData}
         weeklyTrendHistory={weeklyTrendHistory}
         weeklyTodayIndex={pastDays}
+        revenueHistory={revenueHistory}
       />
     </section>
   );

@@ -9,6 +9,14 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
+function formatReservationCreatedAt(date: Date): string {
+  return new Intl.DateTimeFormat("es-PE", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "America/Lima",
+  }).format(date);
+}
+
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("es-PE", {
     style: "currency",
@@ -41,11 +49,13 @@ export async function PanelAdmin() {
   });
 
   return (
-    <section className="w-full px-6 py-12">
+    <section className="w-full h-full px-6 py-12 flex justify-center items-center flex-col bg-[#F3EDE4]">
+      <p className="text-[2rem] font-medium">Historial de reservas</p>
       <table className="w-full max-w-6xl border-collapse overflow-hidden rounded-lg bg-white text-sm shadow-md">
-        <thead className="bg-amber-900 text-white">
+        <thead className="bg-emerald-900 text-white">
           <tr>
-            <th className="p-4 text-left font-semibold">Fecha</th>
+            <th className="p-4 text-left font-semibold">Fecha de reserva</th>
+            <th className="p-4 text-left font-semibold">Fecha reservada</th>
             <th className="p-4 text-left font-semibold">Usuario</th>
             <th className="p-4 text-left font-semibold">Email</th>
             <th className="p-4 text-left font-semibold">Cancha</th>
@@ -57,13 +67,14 @@ export async function PanelAdmin() {
         <tbody>
           {bookings.length === 0 ? (
             <tr>
-              <td className="p-4 text-center text-gray-500" colSpan={6}>
+              <td className="p-4 text-center text-gray-500" colSpan={7}>
                 Aun no hay reservaciones registradas.
               </td>
             </tr>
           ) : (
             bookings.map((booking) => (
               <tr className="transition hover:bg-blue-100" key={booking.id}>
+                <td className="p-4">{formatReservationCreatedAt(booking.createdAt)}</td>
                 <td className="p-4">{formatDate(booking.schedule.date)}</td>
                 <td className="p-4">{booking.user.name}</td>
                 <td className="p-4">{booking.user.email}</td>
