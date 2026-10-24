@@ -67,7 +67,7 @@ export function HeroSection() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href="#reservation"
+            href="#Booking"
             className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
           >
             Reservar ahora
