@@ -1,8 +1,9 @@
 "use server"
 
 import {auth} from "@/src/lib/auth";
-import { redirect } from "next/navigation";   
+import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+
 
 
 function getErrorMessage(error: unknown): string {
@@ -87,8 +88,8 @@ await auth.api.signOut({
     headers: await headers()
 }
 )
+   
 
- 
 redirect("/");
 }
  
