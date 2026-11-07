@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-
-const MAX_SELECTION = 3;
+import {
+  BOOKING_SLOTS,
+  canSelectSlot,
+  getAvailableSlots,
+} from '@/src/lib/booking-rules';
 
 type CalendarProps = {
   selectedDate: Date | null;
@@ -82,28 +85,16 @@ export const Calendar = ({
     };
   }, [selectedDate, courtName, onSelectedSlotsChange]);
 
-  const hours = [
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-  ];
+  const hours = BOOKING_SLOTS;
 
   const toggleSlot = (hour: string) => {
     if (isLoadingSlots) return;
-    if (bookedSlots.includes(hour)) return;
-
     onSelectedSlotsChange((prev) => {
       if (prev.includes(hour)) {
         return prev.filter((h) => h !== hour);
       }
 
-      if (prev.length >= MAX_SELECTION) return prev;
+      if (!canSelectSlot(prev, hour, bookedSlots)) return prev;
 
       return [...prev, hour];
     });
@@ -163,7 +154,7 @@ export const Calendar = ({
 
           <div className="flex flex-col gap-2">
             {hours.map((hour) => {
-              const isBooked = bookedSlots.includes(hour);
+              const isBooked = !getAvailableSlots(bookedSlots, hours).includes(hour);
               
               const isSelected = selectedSlots.includes(hour);
 

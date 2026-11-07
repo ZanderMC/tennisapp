@@ -1,4 +1,5 @@
 import { BuyButton } from "./BuyButton";
+import { calculateBookingTotal } from "@/src/lib/booking-rules";
 
 //import { BuyButton } from "./BuyButton";
 type SummaryProps = {
@@ -20,7 +21,7 @@ export function Summary({selectedDate,selectedSlots,courtName,slotPrice,onClear,
         day: 'numeric',
     });
 
-    const total = selectedSlots.length * slotPrice;
+    const total = calculateBookingTotal(selectedSlots, slotPrice);
 
 
     
