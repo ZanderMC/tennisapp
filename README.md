@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+TennisApp
+Live Demo: tennisapp-zndr.vercel.app
 
-## Getting Started
+English
+TennisApp is a full-stack tennis court reservation platform. Users can create an account, browse court availability by date and time, reserve available slots, and complete payments through Mercado Pago. The application also includes an administrative dashboard with booking, revenue, hourly, and court-usage statistics.
 
-First, run the development server:
+The project is deployed to production with Vercel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Features
+User registration and email/password authentication.
+Session management with Better Auth.
+Court availability search by court and date.
+Reservation creation with protection against double bookings.
+Mercado Pago payment integration and payment status tracking.
+Checkout and order status pages.
+Administrative dashboard for reservations and statistics.
+Responsive landing page and reservation flow.
+PostgreSQL persistence through Prisma ORM.
+Tech stack
+Next.js 16 with the App Router and Turbopack.
+React 19 and TypeScript.
+Tailwind CSS.
+Better Auth.
+Prisma ORM 7 with the PostgreSQL driver adapter.
+PostgreSQL.
+Mercado Pago SDK.
+Recharts for dashboard visualizations.
+Vercel for deployment.
+Español
+TennisApp es una plataforma full-stack para reservar canchas de tenis. Los usuarios pueden crear una cuenta, consultar la disponibilidad de las canchas por fecha y horario, reservar espacios disponibles y realizar pagos mediante Mercado Pago. La aplicación también incluye un panel administrativo con estadísticas de reservas, ingresos, horarios y uso de las canchas.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+El proyecto está desplegado en producción mediante Vercel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Funcionalidades
+Registro e inicio de sesión con correo electrónico y contraseña.
+Gestión de sesiones mediante Better Auth.
+Consulta de disponibilidad por cancha y fecha.
+Creación de reservas con protección contra reservas duplicadas.
+Integración de pagos con Mercado Pago y seguimiento del estado del pago.
+Páginas de checkout y estado de las órdenes.
+Panel administrativo para reservas y estadísticas.
+Landing page y flujo de reservas responsive.
+Persistencia en PostgreSQL mediante Prisma ORM.
+Tecnologías utilizadas
+Next.js 16 con App Router y Turbopack.
+React 19 y TypeScript.
+Tailwind CSS.
+Better Auth.
+Prisma ORM 7 con el adaptador para PostgreSQL.
+PostgreSQL.
+SDK de Mercado Pago.
+Recharts para las visualizaciones del panel.
+Vercel para el despliegue.
