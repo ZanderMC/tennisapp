@@ -8,7 +8,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "e2e": "cucumber-js --config QA/e2e/cucumber.mjs"
+    "test:unit": "vitest run QA/unit",
+    "test:e2e": "cucumber-js --config QA/e2e/cucumber.mjs",
+    "test:smoke": "playwright test QA/smoke"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -45,6 +47,7 @@
     "start-server-and-test": "^3.0.13",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }
